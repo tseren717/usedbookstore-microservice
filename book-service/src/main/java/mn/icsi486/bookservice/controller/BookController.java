@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import mn.icsi486.bookservice.domain.Book;
 import mn.icsi486.bookservice.service.BookService;
 
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,22 @@ public class BookController extends HttpServlet {
 
     private final BookService bookService = new BookService();
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setCorsHeaders(resp);
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            resp.setStatus(200);
+            return;
+        }
+        super.service(req, resp);
+    }
+
+    private void setCorsHeaders(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

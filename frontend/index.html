@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Bookstore</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="page-login">
+    <div class="navbar"><div class="brand">Used Bookstore</div></div>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Нэвтрэх</h2>
+            <div id="login-alert"></div>
+            <div class="form-group">
+                <label>Хэрэглэгчийн нэр</label>
+                <input type="text" id="login-username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label>Нууц үг</label>
+                <input type="password" id="login-password" placeholder="password">
+            </div>
+            <button class="btn-auth" onclick="doLogin()">Нэвтрэх</button>
+            <div class="auth-link">
+                <a onclick="showPage('register')">Бүртгүүлэх</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="page-register" class="hidden">
+    <div class="navbar"><div class="brand">Used Bookstore</div></div>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Бүртгүүлэх</h2>
+            <div id="register-alert"></div>
+            <div class="form-group">
+                <label>Хэрэглэгчийн нэр</label>
+                <input type="text" id="reg-username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label>Нууц үг</label>
+                <input type="password" id="reg-password" placeholder="password">
+            </div>
+            <div class="form-group">
+                <label>Нууц үг давтах</label>
+                <input type="password" id="reg-confirm" placeholder="confirm">
+            </div>
+            <button class="btn-auth" onclick="doRegister()">Бүртгүүлэх</button>
+            <div class="auth-link">
+                <a onclick="showPage('login')">Нэвтрэх руу буцах</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="page-app" class="hidden">
+    <div class="navbar">
+        <div class="brand">Used Bookstore</div>
+        <div class="nav-right">
+            <a class="nav-link active" onclick="switchNav(event,'books')">Номнууд</a>
+            <a class="nav-link" onclick="switchNav(event,'my-books')">Миний зарууд</a>
+            <a class="nav-link" onclick="switchNav(event,'my-orders')">Миний захиалга</a>
+            <span class="nav-user" id="nav-user"></span>
+            <a class="nav-link nav-logout" onclick="doLogout()">Гарах</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ===== BOOKS SECTION ===== -->
+        <div id="section-books">
+            <!-- Add Book Form -->
+            <div class="card">
+                <h3 class="card-title">Ном зарах</h3>
+                <div class="sell-form">
+                    <div class="sell-row">
+                        <div class="sell-col">
+                            <label>Номын нэр</label>
+                            <input type="text" id="f-title">
+                        </div>
+                        <div class="sell-col">
+                            <label>Зохиолч</label>
+                            <input type="text" id="f-author">
+                        </div>
+                        <div class="sell-col">
+                            <label>ISBN</label>
+                            <input type="text" id="f-isbn">
+                        </div>
+                        <div class="sell-col">
+                            <label>Үнэ (мянган ₮)</label>
+                            <input type="number" id="f-price" placeholder="Жишээ: 15 = 15,000₮">
+                        </div>
+                        <div class="sell-col">
+                            <label>Нөхцөл</label>
+                            <select id="f-condition">
+                                <option value="NEW">NEW</option>
+                                <option value="LIKE_NEW">LIKE_NEW</option>
+                                <option value="GOOD">GOOD</option>
+                                <option value="FAIR">FAIR</option>
+                                <option value="POOR">POOR</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sell-row">
+                        <div class="sell-col">
+                            <label>Ангилал</label>
+                            <select id="f-category">
+                                <option value="FICTION">FICTION</option>
+                                <option value="NON_FICTION">NON_FICTION</option>
+                                <option value="SCIENCE">SCIENCE</option>
+                                <option value="HISTORY">HISTORY</option>
+                                <option value="OTHER">OTHER</option>
+                            </select>
+                        </div>
+                        <div class="sell-col">
+                            <label>Зураг</label>
+                            <input type="file" id="f-image" accept="image/*">
+                        </div>
+                        <div class="sell-col col-wide">
+                            <label>Тайлбар</label>
+                            <textarea id="f-desc" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="addBook()">Ном нэмэх</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="card filter-bar">
+                <div class="filter-row">
+                    <div class="filter-col">
+                        <label>Хайх</label>
+                        <input type="text" id="search-text" placeholder="Нэр, зохиолч, ISBN...">
+                    </div>
+                    <div class="filter-col">
+                        <label>Ангилал</label>
+                        <select id="filter-category">
+                            <option value="">Бүгд</option>
+                            <option value="FICTION">FICTION</option>
+                            <option value="NON_FICTION">NON_FICTION</option>
+                            <option value="SCIENCE">SCIENCE</option>
+                            <option value="HISTORY">HISTORY</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                    </div>
+                    <div class="filter-col">
+                        <label>Нөхцөл</label>
+                        <select id="filter-condition">
+                            <option value="">Бүгд</option>
+                            <option value="NEW">NEW</option>
+                            <option value="LIKE_NEW">LIKE_NEW</option>
+                            <option value="GOOD">GOOD</option>
+                            <option value="FAIR">FAIR</option>
+                            <option value="POOR">POOR</option>
+                        </select>
+                    </div>
+                    <div class="filter-col">
+                        <label>Мин үнэ</label>
+                        <input type="number" id="filter-min" value="0">
+                    </div>
+                    <div class="filter-col">
+                        <label>Макс үнэ</label>
+                        <input type="number" id="filter-max" placeholder="~">
+                    </div>
+                    <div class="filter-col filter-btn-col">
+                        <button class="btn-dark" onclick="applyFilter()">Шүүх</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Books Table -->
+            <h3 class="section-title">Бэлэн номнууд</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ЗУРАГ</th>
+                            <th>НОМЫН НЭР</th>
+                            <th>ЗОХИОЛЧ</th>
+                            <th>ҮНЭ</th>
+                            <th>НӨХЦӨЛ</th>
+                            <th>АНГИЛАЛ</th>
+                            <th>ХУДАЛДАГЧ</th>
+                            <th>ҮЙЛДЭЛ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="books-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== MY BOOKS SECTION ===== -->
+        <div id="section-my-books" class="hidden">
+            <h3 class="section-title">Миний зарж буй номнууд</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ЗУРАГ</th>
+                            <th>НОМЫН НЭР</th>
+                            <th>ЗОХИОЛЧ</th>
+                            <th>ҮНЭ</th>
+                            <th>НӨХЦӨЛ</th>
+                            <th>ТӨЛӨВ</th>
+                            <th>ҮЙЛДЭЛ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-books-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== MY ORDERS SECTION ===== -->
+        <div id="section-my-orders" class="hidden">
+            <h3 class="section-title">Миний захиалгууд</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>НОМ ID</th>
+                            <th>ХУДАЛДАГЧ</th>
+                            <th>ҮНЭ</th>
+                            <th>ТӨЛӨВ</th>
+                            <th>ОГНОО</th>
+                            <th>ҮЙЛДЭЛ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
